@@ -69,7 +69,10 @@ class CassandraConnection(object):
             connection.get_connection(name=self.alias)
         except CQLEngineException:
             if self.default:
-                from cassandra.cqlengine import models
+                try:
+                    from dse.cqlengine import models
+                except ImportError:
+                    from cassandra.cqlengine import models
                 models.DEFAULT_KEYSPACE = self.keyspace
 
             for option, value in self.session_options.items():

@@ -1,5 +1,9 @@
 import django
-from cassandra.cqlengine.connection import set_default_connection
+
+try:
+    from dse.cqlengine.connection import set_default_connection
+except ImportError:
+    from cassandra.cqlengine.connection import set_default_connection
 
 from django_cassandra_engine.utils import get_default_cassandra_connection
 from ..compat import create_keyspace_simple, drop_keyspace

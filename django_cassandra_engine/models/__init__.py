@@ -656,8 +656,8 @@ class DjangoCassandraQuerySet(query.ModelQuerySet):
         super(query.ModelQuerySet, self).__init__(*args, **kwargs)
         self._allow_filtering = True
         self.query = StubQuery(model=self.model)
-        self.read_consistency_level = self._get_consistency_level_read()
-        self.write_consistency_level = self._get_consistency_level_write()
+        self.consistency_level_read = self._get_consistency_level_read()
+        self.consistency_level_write = self._get_consistency_level_write()
 
     def _get_consistency_level_read(self):
         return self._get_consistency_level("consistency_level_read")
@@ -896,5 +896,5 @@ class DjangoCassandraModel(
             return None
 
     def _set_consistency_level(self):
-        if hasattr(self, "Meta") and hasattr(self.Meta, "consistency_level_writes"):
-            self.consistency(self.Meta.consistency_level_writes)
+        if hasattr(self, "Meta") and hasattr(self.Meta, "consistency_level_write"):
+            self.consistency(self.Meta.consistency_level_write)

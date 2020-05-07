@@ -680,12 +680,12 @@ class DjangoCassandraQuerySet(query.ModelQuerySet):
         consistency_changed = False
         if self._consistency is None:
             if isinstance(statement, SelectStatement):
-                if self.read_consistency_level is not None:
-                    self._consistency = self.read_consistency_level
+                if self.consistency_level_read is not None:
+                    self._consistency = self.consistency_level_read
                     consistency_changed = True
             else:
-                if self.write_consistency_level is not None:
-                    self._consistency = self.write_consistency_level
+                if self.consistency_level_write is not None:
+                    self._consistency = self.consistency_level_write
                     consistency_changed = True
 
         result = super(query.ModelQuerySet, self)._execute(statement)

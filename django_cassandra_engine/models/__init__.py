@@ -896,5 +896,5 @@ class DjangoCassandraModel(
             return None
 
     def _set_consistency_level(self):
-        if hasattr(self, "Meta") and hasattr(self.Meta, "_cassandra_consistency_level_write"):
-            self.consistency(self.Meta._cassandra_consistency_level_write)
+        if hasattr(self, "_cassandra_consistency_level_write"):
+            self.consistency(self._cassandra_consistency_level_write)

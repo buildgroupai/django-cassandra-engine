@@ -660,14 +660,14 @@ class DjangoCassandraQuerySet(query.ModelQuerySet):
         self.consistency_level_write = self._get_consistency_level_write()
 
     def _get_consistency_level_read(self):
-        return self._get_consistency_level("consistency_level_read")
+        return self._get_consistency_level("_cassandra_consistency_level_read")
 
     def _get_consistency_level_write(self):
-        return self._get_consistency_level("consistency_level_write")
+        return self._get_consistency_level("_cassandra_consistency_level_write")
 
     def _get_consistency_level(self, field_name):
-        if hasattr(self, "Meta") and hasattr(self.Meta, field_name):
-            return getattr(self.Meta, field_name)
+        if hasattr(self, field_name):
+            return getattr(self, field_name)
         return None
 
     def _execute(self, statement):
@@ -896,5 +896,5 @@ class DjangoCassandraModel(
             return None
 
     def _set_consistency_level(self):
-        if hasattr(self, "Meta") and hasattr(self.Meta, "consistency_level_write"):
-            self.consistency(self.Meta.consistency_level_write)
+        if hasattr(self, "Meta") and hasattr(self.Meta, "_cassandra_consistency_level_write"):
+            self.consistency(self.Meta._cassandra_consistency_level_write)

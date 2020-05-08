@@ -3,7 +3,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 from django_cassandra_engine.models import DjangoCassandraModel
 from django_cassandra_engine.utils import get_engine_from_db_alias
-from django.apps import apps
 
 from ...compat import Model, management
 
@@ -29,9 +28,9 @@ class Command(BaseCommand):
 
         from importlib import import_module
 
-        for app_config in apps.get_app_configs():
+        for app_name in settings.INSTALLED_APPS:
             try:
-                import_module('.management', app_config.name)
+                import_module('.management', app_name)
             except SystemError:
                 # We get SystemError if INSTALLED_APPS contains the
                 # name of a class rather than a module

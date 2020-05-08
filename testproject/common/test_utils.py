@@ -1,18 +1,11 @@
+from django.test import TestCase
 from django.core.management import call_command
-from django.test import TestCase as DjangoTestCase
-
 from django_cassandra_engine.utils import get_cassandra_connections
 
 
-class TestCase(DjangoTestCase):
+class CassandraTestCase(TestCase):
 
-    def _fixture_teardown(self):
-        """
-        Allow normal django TestCase fixture teardown, but also flush the test
-        database for each cassandra alias.
-        """
-        super(TestCase, self)._fixture_teardown()
-
+    def setUp(self):
         for alias, _ in get_cassandra_connections():
             # Flush the database
             call_command('flush', verbosity=0, interactive=False,

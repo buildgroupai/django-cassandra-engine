@@ -1,6 +1,10 @@
 import subprocess
 
-from django.db.backends.base.client import BaseDatabaseClient
+import django
+if django.VERSION[0:2] >= (1, 8):
+    from django.db.backends.base.client import BaseDatabaseClient
+else:
+    from django.db.backends import BaseDatabaseClient
 
 
 class CassandraDatabaseClient(BaseDatabaseClient):

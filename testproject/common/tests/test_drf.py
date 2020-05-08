@@ -5,18 +5,15 @@ from unittest import skipIf
 import django
 import six.moves.http_client
 from rest_framework.test import APITestCase
-
 try:
     from django.core.urlresolvers import reverse
 except ImportError:
     from django.urls import reverse
 
-from django_cassandra_engine.test import TestCase as CassandraTestCase
 from common.models import (
-    CassandraThing,
-    CassandraThingMultiplePK,
-    CassandraFamilyMember,
+    CassandraThing, CassandraThingMultiplePK, CassandraFamilyMember
 )
+from common.test_utils import CassandraTestCase
 from common.serializers import CassandraFamilyMemberSerializer
 
 
@@ -27,11 +24,11 @@ class TestModelViewSet(APITestCase):
     def setUp(self):
         self.data2a = {
             'id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1a',
-            'data_abstract': 'TeXt',
+            'data_abstract': 'TeXt'
         }
         self.data2b = {
             'id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1b',
-            'data_abstract': 'TeXt',
+            'data_abstract': 'TeXt'
         }
 
     @skipIf(django.VERSION[1] < 10, "For Django>1.10 only")
@@ -40,7 +37,8 @@ class TestModelViewSet(APITestCase):
         self.assertEqual(response.status_code, six.moves.http_client.CREATED)
         self.assertEqual(CassandraThing.objects.count(), 1)
         self.assertEqual(
-            CassandraThing.objects.get().id, uuid.UUID(self.data2a['id'])
+            CassandraThing.objects.get().id,
+            uuid.UUID(self.data2a['id'])
         )
         get_url = '{}{}/'.format(self.url, self.data2a['id'])
         response = self.client.get(get_url, format='json')
@@ -55,7 +53,7 @@ class TestModelViewSet(APITestCase):
 
         self.assertEqual(
             CassandraThing.objects.get(id=self.data2b['id']).id,
-            uuid.UUID(self.data2b['id']),
+            uuid.UUID(self.data2b['id'])
         )
 
         get_url = '{}{}/'.format(self.url, self.data2b['id'])
@@ -70,7 +68,7 @@ class TestListCreateAPIViewWithMultiplePK(APITestCase):
             'id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1a',
             'another_id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1b',
             'data_abstract': 'TeXt',
-            'created_on': '2016-11-12T23:12',
+            'created_on': '2016-11-12T23:12'
         }
 
     def test_create_multiple_pk_thing(self):
@@ -80,7 +78,7 @@ class TestListCreateAPIViewWithMultiplePK(APITestCase):
             'another_id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1b',
             'created_on': '2016-11-12T23:12:00Z',
             'data_abstract': 'TeXt',
-            'id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1a',
+            'id': 'a9be910b-3338-4340-b773-f7ec2bc1ce1a'
         }
         self.assertEqual(response.status_code, six.moves.http_client.CREATED)
         self.assertDictEqual(response.json(), expected_json)
@@ -93,6 +91,7 @@ class TestListCreateAPIViewWithMultiplePK(APITestCase):
 
 
 class TestSerializer(APITestCase, CassandraTestCase):
+
     def test_serialize_creates(self):
         now = datetime.now()
         data = {
